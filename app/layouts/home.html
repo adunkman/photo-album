@@ -1,0 +1,12 @@
+{{- define "body" -}}
+  {{- range .Resources -}}
+    <figure>
+      <a href="{{ .RelPermalink }}">
+        <img src="{{ .RelPermalink }}" alt="Photo captioned with: {{ .Exif.Tags.ImageDescription }}">
+      </a>
+      <figcaption>
+        {{ .Exif.Tags.ImageDescription }}
+      </figcaption>
+    </figure>
+  {{- end -}}
+{{- end -}}

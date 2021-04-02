@@ -1,0 +1,9 @@
+languageCode: en-us
+title: Andrew Dunkman
+
+baseURL: https://photos.dunkman.me
+relativeURLs: true
+
+ignoreFiles:
+  - .gitignore
+  - Dockerfile
