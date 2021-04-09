@@ -55,3 +55,9 @@ jobs:
         run: make terraform-apply
         env:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Deploy site
+        if: ${{ env.AWS_ACCESS_KEY_ID != '' }}
+        run: make deploy
+        env:
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

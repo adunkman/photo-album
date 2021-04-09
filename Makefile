@@ -15,7 +15,7 @@ build: ## Generate compiled application files to prepare for a deployment
 
 .PHONY: deploy
 deploy: ## 🔒 Deploys compiled application files to static host
-	@docker-compose run hugo deploy --maxDeletes -1
+	@HUGO_ENV=production docker-compose run hugo deploy --maxDeletes -1
 
 .PHONY: photos-download
 photos-download: ## 🔒 Downloads any photos to the local directory from remote

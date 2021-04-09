@@ -1,5 +1,4 @@
-googleAnalytics: UA-42927858-1
-
 targets:
   name: production
-  URL: s3://photos.dunkman.me?region=us-east-1
+  # TODO: figure out how to set this via env var
+  url: s3://photos.dunkman.me-site?region=us-east-1
