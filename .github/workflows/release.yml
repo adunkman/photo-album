@@ -30,6 +30,9 @@ jobs:
           if-no-files-found: error
           path: app/public/**/*
 
+      - name: Scan infrastructure for security issues
+        run: make tfsec
+
       - name: Initialize terraform
         if: ${{ env.AWS_ACCESS_KEY_ID != '' }}
         run: make terraform-init
