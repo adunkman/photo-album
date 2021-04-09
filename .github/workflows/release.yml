@@ -35,3 +35,15 @@ jobs:
         run: make terraform-init
         env:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Plan infrastructure changes
+        if: ${{ env.AWS_ACCESS_KEY_ID != '' }}
+        run: make terraform-plan
+        env:
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Apply infrastructure changes
+        if: ${{ env.AWS_ACCESS_KEY_ID != '' }}
+        run: make terraform-apply
+        env:
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
