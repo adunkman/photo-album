@@ -1,5 +1,5 @@
 order:
-  - &static_assets ^.+\.(js|css|jpeg)$
+  - &static_assets ^.+\.(js|css|jpg|jpeg)$
 
 matchers:
   - pattern: *static_assets

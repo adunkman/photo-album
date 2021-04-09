@@ -1,5 +1,7 @@
 /public
 /resources
+/content/*.jpg
+/content/*.jpeg
 
 ## OS Files
 # Windows

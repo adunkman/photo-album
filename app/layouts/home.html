@@ -2,11 +2,13 @@
   {{- range .Resources -}}
     <figure>
       <a href="{{ .RelPermalink }}">
-        <img src="{{ .RelPermalink }}" alt="Photo captioned with: {{ .Exif.Tags.ImageDescription }}">
+        <img src="{{ .RelPermalink }}" alt="{{ with .Exif }}Photo captioned with: {{ .Exif.Tags.ImageDescription }}{{ end }}">
       </a>
-      <figcaption>
-        {{ .Exif.Tags.ImageDescription }}
-      </figcaption>
+      {{- with .Exif -}}
+        <figcaption>
+          {{ .Exif.Tags.ImageDescription }}
+        </figcaption>
+      {{- end -}}
     </figure>
   {{- end -}}
 {{- end -}}
