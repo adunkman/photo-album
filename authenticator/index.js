@@ -1,3 +1,4 @@
+const URL = require('url').URL;
 const credentials = require('./credentials.json');
 
 const appendIndexFile = (url) => {
@@ -11,7 +12,7 @@ const appendIndexFile = (url) => {
 exports.handler = async (event) => {
   const request = event.Records[0].cf.request;
   const authorization = request.headers.authorization;
-  const authString = 'Basic ' + new Buffer(`${credentials.username}:${credentials.password}`).toString('base64');
+  const authString = 'Basic ' + Buffer.from(`${credentials.username}:${credentials.password}`).toString('base64');
 
   if (authorization && authorization[0] && authorization[0].value === authString) {
     // Rewrite request URI to append "index.html" if root directory request.
