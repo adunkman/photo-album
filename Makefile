@@ -18,6 +18,10 @@ start: $(placeholders) ## Runs the full application stack locally
 build: $(placeholders) ## Generate compiled application files to prepare for a deployment
 	@docker-compose run hugo --
 
+.PHONY: clean
+clean: ## Remove all build artifacts
+	@rm app/content/photos/*.md
+
 .PHONY: deploy
 deploy: ## 🔒 Deploys compiled application files to static host
 	@HUGO_ENV=production docker-compose run hugo deploy --maxDeletes -1
