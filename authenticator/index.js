@@ -1,13 +1,4 @@
-const URL = require('url').URL;
 const credentials = require('./credentials.json');
-
-const appendIndexFile = (url) => {
-  if (!url.pathname.includes('.')) {
-    url.pathname = url.pathname.replace(/\/?$/, '\/index.html');
-  }
-
-  return url.toString();
-};
 
 exports.handler = async (event) => {
   const request = event.Records[0].cf.request;
@@ -16,7 +7,7 @@ exports.handler = async (event) => {
 
   if (authorization && authorization[0] && authorization[0].value === authString) {
     // Rewrite request URI to append "index.html" if root directory request.
-    request.uri = appendIndexFile(new URL(request.uri));
+    request.uri = request.uri.includes('.') ? request.uri : request.uri.replace(/\/?$/, '\/index.html')
 
     // Allow request
     return request;
