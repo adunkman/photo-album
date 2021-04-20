@@ -6,6 +6,9 @@ exports.handler =  async (event) => {
   const authString = 'Basic ' + new Buffer(`${credentials.username}:${credentials.password}`).toString('base64');
 
   if (authorization && authorization[0] && authorization[0].value === authString) {
+    // Rewrite request URI to append "index.html" if root directory request.
+    request.uri = request.uri.replace(/\/$/, '\/index.html');
+
     // Allow request
     return request;
   }
