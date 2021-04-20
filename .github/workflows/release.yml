@@ -25,15 +25,18 @@ jobs:
           path: terraform/.terraform
           key: v1-${{ hashFiles('terraform/.terraform.lock.hcl') }}
 
+      - name: Remove example photos
+        if: ${{ env.AWS_ACCESS_KEY_ID != '' }}
+        run: make photos-remove-examples
+
+      - name: Download photos from S3
+        if: ${{ env.AWS_ACCESS_KEY_ID != '' }}
+        run: make photos-download
+        env:
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
       - name: Build site
         run: make build
-
-      - name: Store site as an artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: Site
-          if-no-files-found: error
-          path: app/public/**/*
 
       - name: Scan infrastructure for security issues
         run: make tfsec

@@ -22,6 +22,10 @@ build: $(placeholders) ## Generate compiled application files to prepare for a d
 deploy: ## 🔒 Deploys compiled application files to static host
 	@HUGO_ENV=production docker-compose run hugo deploy --maxDeletes -1
 
+.PHONY: photos-remove-examples
+photos-remove-examples: ## Remove example photos from the local directory
+	@rm app/assets/images/photos/*-example.jpeg
+
 .PHONY: photos-download
 photos-download: ## 🔒 Downloads any photos to the local directory from remote
 	@docker-compose run aws s3 sync s3://${DOMAIN}-storage/photos/ /app/assets/images/photos/ && \
