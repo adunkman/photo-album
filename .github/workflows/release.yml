@@ -43,18 +43,24 @@ jobs:
         run: make terraform-init
         env:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          SITE_USERNAME: ${{ secrets.SITE_USERNAME }}
+          SITE_PASSWORD: ${{ secrets.SITE_PASSWORD }}
 
       - name: Plan infrastructure changes
         if: ${{ env.AWS_ACCESS_KEY_ID != '' }}
         run: make terraform-plan
         env:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          SITE_USERNAME: ${{ secrets.SITE_USERNAME }}
+          SITE_PASSWORD: ${{ secrets.SITE_PASSWORD }}
 
       - name: Apply infrastructure changes
         if: ${{ env.AWS_ACCESS_KEY_ID != '' }}
         run: make terraform-apply
         env:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          SITE_USERNAME: ${{ secrets.SITE_USERNAME }}
+          SITE_PASSWORD: ${{ secrets.SITE_PASSWORD }}
 
       - name: Deploy site
         if: ${{ env.AWS_ACCESS_KEY_ID != '' }}
