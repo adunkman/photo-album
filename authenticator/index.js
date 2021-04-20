@@ -16,7 +16,7 @@ exports.handler = async (event) => {
 
   if (authorization && authorization[0] && authorization[0].value === authString) {
     // Rewrite request URI to append "index.html" if root directory request.
-    request.uri = appendIndexFile(new URL(request.url));
+    request.uri = appendIndexFile(new URL(request.uri));
 
     // Allow request
     return request;
