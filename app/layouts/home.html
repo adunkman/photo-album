@@ -1,14 +1,60 @@
 {{- define "body" -}}
-  {{- range .Resources -}}
-    <figure>
-      <a href="{{ .RelPermalink }}">
-        <img src="{{ .RelPermalink }}" alt="{{ with .Exif }}Photo captioned with: {{ .Exif.Tags.ImageDescription }}{{ end }}">
-      </a>
-      {{- with .Exif -}}
-        <figcaption>
-          {{ .Exif.Tags.ImageDescription }}
-        </figcaption>
+  <main>
+    {{- $photos := readDir "assets/images/photos" -}}
+    {{- $byYear := newScratch -}}
+
+    {{- range $photos -}}
+      {{- $year := slicestr .Name 0 4 -}}
+      {{- $photo := resources.Get (print "images/photos/" .Name) -}}
+      {{- $caption := "" -}}
+      {{- with $photo.Exif }}{{ $caption = .Tags.ImageDescription }}{{ end -}}
+
+      {{- $byYear.Add $year (slice (dict "FileInfo" . "Image" $photo "Caption" $caption)) -}}
+    {{- end -}}
+
+    <div class="photo-tiles" role="list" aria-label="Photos grouped by year">
+      {{- range $year, $photos := $byYear.Values -}}
+        {{- $byMonth := newScratch -}}
+        {{- range $photos -}}
+          {{- $month := slicestr .FileInfo.Name 4 6 -}}
+          {{- $byMonth.Add $month (slice .) -}}
+        {{- end -}}
+
+        <details open role="listitem">
+          <summary>
+            <h2>
+              <span>{{ $year }}</span>
+              <span class="photo-count">{{ len $photos }} {{ cond (eq (len $photos) 1) "item" "items" }}</span>
+            </h2>
+          </summary>
+
+          {{- range $month, $photos := $byMonth.Values -}}
+            <div>
+              <h3 class="sticky-date-overlay">
+                <time datetime="{{ $year }}-{{ $month }}" aria-label="{{ dateFormat "January 2006" (print $year "-" $month "-01") }}">{{ dateFormat "2006 January" (print $year "-" $month "-01") }}</time>
+                <span class="photo-count">{{ len $photos }} {{ cond (eq (len $photos) 1) "item" "items" }}</span>
+              </h3>
+
+              <ol>
+                {{- range $photos -}}
+                  {{- $thumb := .Image.Resize "x800 Lanczos" | resources.Fingerprint -}}
+                  {{- $full := .Image | resources.Fingerprint -}}
+                  {{- $page := (print "photos/" (index (split .FileInfo.Name ".") 0)) -}}
+                  <li style="flex-basis: {{ div $thumb.Width 2 }}px">
+                    <figure>
+                      <a href="{{ $page }}">
+                        <img src="{{ $thumb.RelPermalink }}" alt="{{ .Caption }}" width="{{ div $thumb.Width 2 }}" height="{{ div $thumb.Height 2 }}">
+                      </a>
+                      <figcaption aria-hidden="true">{{ .Caption }}</figcaption>
+                    </figure>
+                  </li>
+                {{- end -}}
+                <li aria-hidden="true"></li>
+              </ol>
+            </div>
+          {{- end -}}
+        </details>
       {{- end -}}
-    </figure>
-  {{- end -}}
+    </div>
+  </main>
 {{- end -}}

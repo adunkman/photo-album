@@ -1,0 +1,29 @@
+{{- define "body" -}}
+  {{- $photo := resources.Get (print "images/photos/" .File.BaseFileName ".jpeg") -}}
+  {{- $full := $photo | resources.Fingerprint -}}
+
+  {{- $caption := "" -}}
+  {{- with $photo.Exif }}{{ $caption = .Tags.ImageDescription }}{{ end -}}
+
+  <main>
+    <figure class="single-photo">
+      <div class="img-container">
+        <a href="{{ $full.RelPermalink }}" >
+          <img src="{{ $full.RelPermalink }}" alt="{{ $caption }}" width="{{ div $full.Width 2 }}" height="{{ div $full.Height 2 }}">
+        </a>
+      </div>
+      <figcaption>
+        {{ $caption }}
+
+        {{- with $photo.Exif -}}
+          <ul class="exif-details">
+            <li>📅 Taken {{ .Date.Format "January 2, 2006" }}</li>
+            {{- if or (ne .Tags.LensMake nil) (ne .Tags.LensMake nil) -}}
+              <li>📷 {{ .Tags.LensMake }} {{ .Tags.LensModel }}</li>
+            {{- end -}}
+          </ul>
+        {{- end -}}
+      </figcaption>
+    </figure>
+  </main>
+{{- end }}

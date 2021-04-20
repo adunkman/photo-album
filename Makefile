@@ -4,13 +4,18 @@ ifneq (,$(wildcard ./.env))
 endif
 
 .DEFAULT_GOAL := help
+photos := $(wildcard app/assets/images/photos/*)
+placeholders := $(patsubst %.jpeg,%.md,$(addprefix app/content/photos/,$(notdir $(photos))))
+
+$(placeholders):
+	@touch $@
 
 .PHONY: start
-start: ## Runs the full application stack locally
+start: $(placeholders) ## Runs the full application stack locally
 	@docker-compose up hugo
 
 .PHONY: build
-build: ## Generate compiled application files to prepare for a deployment
+build: $(placeholders) ## Generate compiled application files to prepare for a deployment
 	@docker-compose run hugo --
 
 .PHONY: deploy
@@ -19,12 +24,12 @@ deploy: ## 🔒 Deploys compiled application files to static host
 
 .PHONY: photos-download
 photos-download: ## 🔒 Downloads any photos to the local directory from remote
-	@docker-compose run aws s3 sync s3://${DOMAIN}-storage/content/ /app/content/ && \
+	@docker-compose run aws s3 sync s3://${DOMAIN}-storage/photos/ /app/assets/images/photos/ && \
 		echo ✨ All files are downloaded!
 
 .PHONY: photos-upload
 photos-upload: ## 🔒 Uploads any photos from the local directory to remote
-	@docker-compose run aws s3 sync --exclude "*" --include "*.jpeg" /app/content/ s3://${DOMAIN}-storage/content/ && \
+	@docker-compose run aws s3 sync --exclude "*" --include "*.jpeg" /app/assets/images/photos/ s3://${DOMAIN}-storage/photos/ && \
 		echo ✨ All files are uploaded!
 
 .PHONY: tfsec
@@ -37,11 +42,11 @@ terraform-init: ## 🔒 Runs terraform init
 
 .PHONY: terraform-plan
 terraform-plan: ## 🔒 Runs terraform plan
-	@docker-compose run terraform plan -out=plan
+	@docker-compose run terraform plan -out=tmp/plan
 
 .PHONY: terraform-apply
 terraform-apply: ## 🔒 Runs terraform apply
-	@docker-compose run terraform apply plan
+	@docker-compose run terraform apply tmp/plan
 
 .PHONY: help
 help:

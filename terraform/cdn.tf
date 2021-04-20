@@ -42,6 +42,12 @@ resource "aws_cloudfront_distribution" "primary" {
 
     viewer_protocol_policy = "redirect-to-https"
     compress = true
+
+    lambda_function_association {
+      event_type = "viewer-request"
+      lambda_arn = aws_lambda_function.authenticator.qualified_arn
+      include_body = false
+    }
   }
 
   viewer_certificate {
