@@ -12,18 +12,26 @@ $(placeholders):
 
 .PHONY: start
 start: $(placeholders) ## Runs the full application stack locally
-	@docker-compose up hugo
+	@docker-compose up
+
+.PHONY: test
+test: ## Runs the authenticator tests in watch mode
+	@docker-compose run auth run jest --watchAll
 
 .PHONY: build
 build: $(placeholders) ## Generate compiled application files to prepare for a deployment
 	@docker-compose run hugo --
+	@docker-compose run -e NODE_ENV=production auth run webpack
 
 .PHONY: clean
 clean: ## Remove all build artifacts
-	@rm app/content/photos/*.md
+	@rm -f app/content/photos/*.md
+	@rm -rf app/public/
+	@rm -rf app/resources/
+	@rm -rf auth/dist/
 
 .PHONY: deploy
-deploy: ## 🔒 Deploys compiled application files to static host
+deploy: ## 🔒 Deploys compiled application files
 	@HUGO_ENV=production docker-compose run hugo deploy --maxDeletes -1
 
 .PHONY: photos-remove-examples
@@ -59,5 +67,5 @@ terraform-apply: ## 🔒 Runs terraform apply
 .PHONY: help
 help:
 	@echo "Usage: make [task]\n\nAvailable tasks:"
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' Makefile | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' Makefile | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-23s\033[0m %s\n", $$1, $$2}'
 	@echo "\n\033[33m(🔒) These tasks require AWS credentials configured via environment variables.\033[0m"

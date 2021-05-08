@@ -28,7 +28,7 @@ resource "aws_cloudfront_distribution" "primary" {
   }
 
   default_cache_behavior {
-    allowed_methods = ["GET", "HEAD", "OPTIONS"]
+    allowed_methods = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods = ["GET", "HEAD", "OPTIONS"]
     target_origin_id = local.s3_origin_id
 
@@ -46,7 +46,7 @@ resource "aws_cloudfront_distribution" "primary" {
     lambda_function_association {
       event_type = "viewer-request"
       lambda_arn = aws_lambda_function.authenticator.qualified_arn
-      include_body = false
+      include_body = true
     }
   }
 

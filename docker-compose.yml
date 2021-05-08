@@ -1,4 +1,4 @@
-version: "2.0"
+version: "3.9"
 services:
   hugo:
     build: ./app
@@ -10,11 +10,34 @@ services:
       AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
       AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
       HUGO_ENV: "${HUGO_ENV}"
-      HUGO_BASEURL: "${SITE_BASEURL}"
+      HUGO_BASEURL: "https://${DOMAIN}"
       HUGO_TITLE: "${SITE_TITLE}"
       HUGO_LANGUAGE_CODE: "${SITE_LANGUAGE_CODE}"
 
+  auth:
+    build: ./auth
+    volumes:
+      - ./auth:/auth
+      - /auth/node_modules
+    depends_on:
+      - hugo
+    ports:
+      - "3000:3000"
+    command: run webpack
+    environment:
+      HOST: "0.0.0.0"
+      PORT: 3000
+      DOMAIN: "${DOMAIN}"
+      COOKIE_ENCRYPTION_SECRET: "${COOKIE_ENCRYPTION_SECRET}"
+      JWT_ENCRYPTION_SECRET: "${JWT_ENCRYPTION_SECRET}"
+      SUPPORT_EMAIL: "${SUPPORT_EMAIL}"
+      AWS_REGION: "${AWS_DEFAULT_REGION}"
+      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+
   aws:
+    profiles:
+      - support
     image: amazon/aws-cli:2.1.30
     volumes:
       - ./app:/app
@@ -24,19 +47,24 @@ services:
       AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
 
   terraform:
+    profiles:
+      - support
     build: ./terraform
     volumes:
       - ./terraform:/terraform
-      - ./authenticator:/authenticator
+      - ./auth:/auth
     environment:
       AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
       AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
-      TF_VAR_site_username: "${SITE_USERNAME}"
-      TF_VAR_site_password: "${SITE_PASSWORD}"
       TF_VAR_region: "${AWS_DEFAULT_REGION}"
       TF_VAR_domain: "${DOMAIN}"
+      TF_VAR_support_email: "${SUPPORT_EMAIL}"
+      TF_VAR_cookie_encryption_secret: "${COOKIE_ENCRYPTION_SECRET}"
+      TF_VAR_jwt_encryption_secret: "${JWT_ENCRYPTION_SECRET}"
 
   tfsec:
+    profiles:
+      - support
     image: tfsec/tfsec:v0.39.20
     volumes:
       - ./terraform:/terraform

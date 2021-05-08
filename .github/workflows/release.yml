@@ -11,9 +11,9 @@ jobs:
     env:
       SITE_TITLE: ${{ secrets.SITE_TITLE }}
       SITE_LANGUAGE_CODE: ${{ secrets.SITE_LANGUAGE_CODE }}
-      SITE_BASEURL: ${{ secrets.SITE_BASEURL }}
       DOMAIN: ${{ secrets.DOMAIN }}
       HUGO_ENV: ${{ secrets.HUGO_ENV }}
+      SUPPORT_EMAIL: ${{ secrets.SUPPORT_EMAIL }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
     steps:
@@ -46,24 +46,24 @@ jobs:
         run: make terraform-init
         env:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          SITE_USERNAME: ${{ secrets.SITE_USERNAME }}
-          SITE_PASSWORD: ${{ secrets.SITE_PASSWORD }}
+          COOKIE_ENCRYPTION_SECRET: ${{ secrets.COOKIE_ENCRYPTION_SECRET }}
+          JWT_ENCRYPTION_SECRET: ${{ secrets.JWT_ENCRYPTION_SECRET }}
 
       - name: Plan infrastructure changes
         if: ${{ env.AWS_ACCESS_KEY_ID != '' }}
         run: make terraform-plan
         env:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          SITE_USERNAME: ${{ secrets.SITE_USERNAME }}
-          SITE_PASSWORD: ${{ secrets.SITE_PASSWORD }}
+          COOKIE_ENCRYPTION_SECRET: ${{ secrets.COOKIE_ENCRYPTION_SECRET }}
+          JWT_ENCRYPTION_SECRET: ${{ secrets.JWT_ENCRYPTION_SECRET }}
 
       - name: Apply infrastructure changes
         if: ${{ env.AWS_ACCESS_KEY_ID != '' }}
         run: make terraform-apply
         env:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          SITE_USERNAME: ${{ secrets.SITE_USERNAME }}
-          SITE_PASSWORD: ${{ secrets.SITE_PASSWORD }}
+          COOKIE_ENCRYPTION_SECRET: ${{ secrets.COOKIE_ENCRYPTION_SECRET }}
+          JWT_ENCRYPTION_SECRET: ${{ secrets.JWT_ENCRYPTION_SECRET }}
 
       - name: Deploy site
         if: ${{ env.AWS_ACCESS_KEY_ID != '' }}

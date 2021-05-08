@@ -42,7 +42,7 @@
                   {{- $page := (print "photos/" (index (split .FileInfo.Name ".") 0)) -}}
                   <li style="flex-basis: {{ div $thumb.Width 2 }}px">
                     <figure>
-                      <a href="{{ $page }}">
+                      <a href="{{ $page }}/">
                         <img src="{{ $thumb.RelPermalink }}" alt="{{ .Caption }}" width="{{ div $thumb.Width 2 }}" height="{{ div $thumb.Height 2 }}">
                       </a>
                       <figcaption aria-hidden="true">{{ .Caption }}</figcaption>

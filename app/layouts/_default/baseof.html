@@ -9,6 +9,11 @@
     {{ partial "head/script.html" "scripts/index.js" }}
   </head>
   <body>
+    <header>
+      <nav>
+        <a href="/logout">Log out</a>
+      </nav>
+    </header>
     {{ block "body" . -}}{{- end }}
   </body>
 </html>

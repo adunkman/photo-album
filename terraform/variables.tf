@@ -6,12 +6,17 @@ variable "region" {
   type = string
 }
 
-variable "site_username" {
+variable "support_email" {
   type = string
   sensitive = true
 }
 
-variable "site_password" {
+variable "cookie_encryption_secret" {
+  type = string
+  sensitive = true
+}
+
+variable "jwt_encryption_secret" {
   type = string
   sensitive = true
 }
