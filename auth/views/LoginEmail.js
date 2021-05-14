@@ -12,12 +12,11 @@ export default (data = {}) => {
 
   return {
     link,
+    subject: 'Your login information 🔒',
     html: deindent(`
       <!DOCTYPE html>
       <html lang="en-us">
         <head>
-          <title>Log in • Andrew Dunkman</title>
-
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -107,14 +106,15 @@ export default (data = {}) => {
         <body>
           <img src="${favicon}" width="64" height="64" alt="Cartoon drawing of Andrew Dunkman">
           <main>
-            <p style="margin: 0 0 1rem;">Someone has requested to log in to <a href="${data.baseUrl}">${data.baseUrl}</a> using this email address. If it was you, click the link below to verify your email and continue logging in.</p>
+            <p style="margin: 0 0 1rem;">Someone has requested to log in to <a href="${data.baseUrl}">${data.baseUrl}</a> using this email address. If it was you, click the link below within 10 minutes to verify your email and continue logging in.</p>
             <a href="${link}" class="button" target="_blank">Verify your email</a>
           </main>
         </body>
       </html>
     `),
     text: deindent(`
-      Someone has requested to log in to ${data.baseUrl} using this email address. If it was you, visit the link below to verify your email address and continue logging in.
+      Someone has requested to log in to ${data.baseUrl} using this email address.
+      If it was you, visit the link below within 10 minutes to verify your email address and continue logging in.
 
       Verify your email: ${link}
     `),

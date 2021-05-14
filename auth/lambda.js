@@ -11,7 +11,7 @@ export const handler = async (event) => {
   server.route({
     method: '*',
     path: '/{param*}',
-    handler: (request, h) => h.continue,
+    handler: (request, h) => h.response().code(404),
   });
 
   const qs = request.querystring;
@@ -34,11 +34,6 @@ export const handler = async (event) => {
     status: response.statusCode,
     statusDescription: response.statusMessage,
   };
-
-  const size = new TextEncoder().encode(JSON.stringify(res)).length;
-  const kiloBytes = size / 1024;
-
-  console.log({ kiloBytes, res });
 
   return res;
 };

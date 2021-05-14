@@ -1,5 +1,6 @@
 import Hapi from "@hapi/hapi";
 import Cookie from "@hapi/cookie";
+import pino from "hapi-pino";
 import jwt from "jsonwebtoken";
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 import renderLoginForm from "../views/LoginForm";
@@ -15,7 +16,20 @@ export const createServer = async () => {
     compression: false,
   });
 
-  await server.register(Cookie);
+  await server.register([
+    Cookie,
+    {
+      plugin: pino,
+      options: {
+        prettyPrint: process.env.NODE_ENV !== 'production',
+        redact: [
+          'queryParams.token'
+        ],
+        logPayload: true,
+        logQueryParams: true,
+      },
+    }
+  ]);
 
   server.auth.strategy('session', 'cookie', {
     cookie: {
@@ -99,13 +113,13 @@ export const createServer = async () => {
           if (process.env.NODE_ENV === "production") {
             try {
               await SES.send(new SendEmailCommand({
-                Source: `notifications@${process.env.DOMAIN}`,
+                Source: `${process.env.DOMAIN} <notifications@${process.env.DOMAIN}>`,
                 ReplyToAddresses: [ process.env.SUPPORT_EMAIL ],
                 ReturnPath: process.env.SUPPORT_EMAIL,
                 Destination: { ToAddresses: [ email ] },
                 Message: {
                   Subject: {
-                    Data: `🔒 Your login information for ${process.env.DOMAIN}`,
+                    Data: message.subject,
                     Charset: 'UTF-8',
                   },
                   Body: {
