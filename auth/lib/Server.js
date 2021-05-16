@@ -36,6 +36,7 @@ export const createServer = async () => {
       name: 'authorization',
       password: process.env.COOKIE_ENCRYPTION_SECRET,
       isSecure: process.env.NODE_ENV === 'production',
+      isSameSite: 'Lax', // Allow setting cookies on redirects
       clearInvalid: true,
       ttl: 604800000, // 7 days
     },
