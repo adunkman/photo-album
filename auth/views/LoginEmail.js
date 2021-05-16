@@ -1,7 +1,5 @@
 import deindent from "deindent";
 
-import favicon from "../assets/images/favicon.png";
-
 export default (data = {}) => {
   const link = new URL('/verify', data.baseUrl);
   link.searchParams.set("token", data.token)
@@ -19,96 +17,46 @@ export default (data = {}) => {
         <head>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1">
-
           <style>
-            html {
-              box-sizing: border-box;
-              font-family: Helvetica, Arial, sans-serif;
-              font-kerning: normal;
-              font-feature-settings: 'kern' 1;
-              line-height: 1.5;
-              text-rendering: optimizeLegibility;
-              min-height: 100vh;
-              background-color: #112f4e;
-              color: #fff;
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-            }
-
-            *,
-            *::before,
-            *::after {
-              box-sizing: inherit;
-            }
-
-            body {
-              width: 100%;
-              max-width: 50ch;
-            }
-
-            img {
-              display: block;
-              margin: 0 auto 2rem;
-            }
-
-            main {
-              margin: 1rem;
-              padding: 2rem;
-              background-color: #fff;
-              border-radius: 0.5rem;
-              color: rgba(0, 0, 0, 0.9);
-              position: relative;
-            }
-
-            main::before {
-              display: block;
-              content: '';
-              width: 1rem;
-              height: 1rem;
-              position: absolute;
-              top: -1rem;
-              left: 50%;
-              transform: translateX(-50%);
-              border-left: .5rem transparent solid;
-              border-right: .5rem transparent solid;
-              border-bottom: .5rem #fff solid;
-            }
-
-            .button {
-              appearance: none;
-              display: inline-block;
-              cursor: pointer;
-              text-decoration: none;
-              font-size: 1rem;
-              font-family: inherit;
-              font-style: normal;
-              font-weight: bold;
-              line-height: inherit;
-              border: 1px transparent solid;
-              border-radius: 0.2rem;
-              padding: 0.5rem 0.7rem;
-              transition: background-color 0.04s ease-out;
-              color: rgba(255, 255, 255, 0.9);
-              background-color: #0076d6;
-            }
-
+            a { color: #005ea2; }
+            a:hover { color: #0076d6; }
+            a:active { color: #0b4778; }
+            .button { transition: background-color 0.04s ease-out; }
             .button:hover {
-              background-color: #2491ff;
+              background-color: #2491ff !important;
             }
 
             .button:active {
-              background-color: #005ea2;
+              background-color: #005ea2 !important;
             }
           </style>
         </head>
-        <body>
-          <img src="${favicon}" width="64" height="64" alt="Cartoon drawing of Andrew Dunkman">
-          <main>
-            <p style="margin: 0 0 1rem;">Someone has requested to log in to <a href="${data.baseUrl}">${data.baseUrl}</a> using this email address. If it was you, click the link below within 10 minutes to verify your email and continue logging in.</p>
-            <a href="${link}" class="button" target="_blank">Verify your email</a>
-          </main>
+        <body bgcolor="#112f4e" style="margin: 0; font-family: helvetica, arial, sans-serif; line-height: 1.5; text-rendering: optimizeLegibility;">
+          <table bgcolor="#112f4e" style="color: #ffffff; padding: 30px 10px;" width="100%">
+            <tr>
+              <td align="center">
+                <table width="100%" bgcolor="#ffffff" style="max-width: 600px; color: #000000; padding: 10px; border-radius: 10px;">
+                  <tr>
+                    <td style="padding: 15px;">
+                      <p style="margin: 0 0 20px;">Someone has requested to log in to <a href="${data.baseUrl}">${data.baseUrl}</a> using this email address. If it was you, click the link below within 10 minutes to verify your email and continue logging in.</p>
+                      <a href="${link}" class="button" style="display: inline-block; text-decoration: none; font-weight: bold; border-radius: 5px; padding: 10px 15px; background-color: #0076d6; color: #fff;">Verify your email</a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td align="center">
+                <table width="100%" style="max-width: 600px; color: #a1d3ff;">
+                  <tr>
+                    <td align="center" style="padding: 40px 0 10px;">
+                      Received this email by mistake? Reply to let me know.
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
         </body>
       </html>
     `),
